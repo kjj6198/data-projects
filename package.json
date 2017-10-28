@@ -1,0 +1,32 @@
+{
+  "name": "data-projects",
+  "version": "0.0.1",
+  "description": "personal data visualization projects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "webpack-dev-server --devtool source-map --hot --inline --port 8080"
+  },
+  "keywords": [
+    "data",
+    "visualization",
+    "d3"
+  ],
+  "author": "Kalan <kjj6198@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^4.11.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "webpack": "^2.7.0"
+  }
+}
