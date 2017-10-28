@@ -4,6 +4,7 @@ const entry = require('./entry');
 
 module.exports = {
   devServer: {
+    stats: 'errors-only',
     proxy: {
       '/api': {
         target: 'http://localhost:8081',
@@ -20,6 +21,9 @@ module.exports = {
   resolve: {
     modules: ['node_modules'],
     extensions: ['.js'],
+    alias: {
+      '@': path.resolve(__dirname, 'src', 'utils'),
+    },
   },
   module: {
     rules: [
@@ -37,6 +41,7 @@ module.exports = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
       },
     }),
+    new webpack.HotModuleReplacementPlugin({ mutiStep: true }),
   ],
 };
 
