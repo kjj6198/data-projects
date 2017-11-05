@@ -1,5 +1,10 @@
 import * as d3 from 'd3';
 
+export const attrs = (options = {}) => s =>
+  Object
+    .keys(options)
+    .forEach(key => s.attr(key, options[key]));
+
 
 export function responsivefy(svg) {
   const container = d3.select(svg.node().parentNode);
@@ -39,7 +44,7 @@ export const generateSVG = (target, width, height, margin = {
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
-    .call(responsivefy)
+    // .call(responsivefy)
     .append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -76,7 +81,28 @@ export function generateAxis(xScale, yScale, label = {}, xTicks = 10, yTicks = 1
   };
 }
 
-export const attrs = (options = {}) => s =>
-  Object
-    .keys(options)
-    .forEach(key => s.attr(key, options[key]));
+export function generateAxisX(xScale, options = {}) {
+  return (svg, callback) => {
+    const axisX = svg
+      .append('g')
+      .attr('transform', `translate(0, ${options.height || 350})`)
+      .call(
+        d3
+          .axisBottom(xScale)
+          .ticks(options.ticks || 6)
+          .tickFormat(options.tickFormat || d3.format('d'))
+      );
+
+    if (options.attrs) {
+      axisX.call(attrs(options.attrs));
+    }
+
+    if (options.className) {
+      axisX.selectAll('g').classed(options.className, true);
+    }
+
+    if (callback && typeof callback === 'function') {
+      callback.call(svg, axisX);
+    }
+  };
+}
