@@ -5,6 +5,11 @@ export const attrs = (options = {}) => s =>
     .keys(options)
     .forEach(key => s.attr(key, options[key]));
 
+export const styles = (options = {}) => s =>
+  Object
+    .keys(options)
+    .forEach(key => s.style(key, options[key]));
+
 
 export function responsivefy(svg) {
   const container = d3.select(svg.node().parentNode);
