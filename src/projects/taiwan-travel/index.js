@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
+import WorldMap from '../../charts/WorldMap';
 import { generateSVG, generateAxis } from '../../utils/d3Utils';
 import { toNumber } from '../../utils/utils';
 import countries from '../../constants/countries';
@@ -81,9 +82,11 @@ function draw(data) {
       .on('click')
   }
 
-  // .attr('d', console.log)
-
-
+  const map = new WorldMap('./data/world.geojson', '#travelerMap');
+  map.projection = d3.geoMercator()
+    .scale(190)
+    .translate([window.innerWidth / 2, window.innerHeight / 2]);
+  map.draw({ text: true });
 }
 
 d3.csv('./data/taiwan-traveler.csv', data => {
