@@ -125,7 +125,6 @@ const populations = {
 
 // drawBarChart(data);
 
-
 d3.json('../fixtures/tokyo.geojson', data => {
   // console.log(data);
   const projection = d3

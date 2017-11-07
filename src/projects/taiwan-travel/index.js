@@ -69,23 +69,21 @@ function draw(data) {
     .style('stroke-width', 2);
 
   paths
-  .append('text')
-  .text(d => countries[d.key.split(' ')[1].toLowerCase()])
-  .attr('x', d => xScale(2016))
-  .attr('y', d => yScale(toNumber(d.values.filter(dd => dd.key !== '地區').slice(-1).pop().value)))
-  .attr('font-size', '18px')
-  .attr('opacity', 0.9)
-  .call(onClick);
+    .append('text')
+    .text(d => countries[d.key.split(' ')[1].toLowerCase()])
+    .attr('x', d => xScale(2016))
+    .attr('y', d => yScale(toNumber(d.values.filter(dd => dd.key !== '地區').slice(-1).pop().value)))
+    .attr('font-size', '18px')
+    .attr('opacity', 0.9);
 
-  function onClick(selection) {
-    selection
-      .on('click')
-  }
+  const map = new WorldMap('./data/world.geojson', '#travelerMap')
+    .setProjection(
+      d3.geoMercator()
+        .scale(190)
+        .translate([window.innerWidth / 2, window.innerHeight / 2])
+    )
+    .draw({ text: true });
 
-  const map = new WorldMap('./data/world.geojson', '#travelerMap');
-  map.projection = d3.geoMercator()
-    .scale(190)
-    .translate([window.innerWidth / 2, window.innerHeight / 2]);
   map.draw({ text: true });
 }
 

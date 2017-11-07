@@ -1,13 +1,19 @@
-import { prop, path } from 'ramda'; 
+import { prop, path, pathOr, identity } from 'ramda'; 
 import * as d3 from 'd3';
-import { attrs } from '../utils/d3Utils';
+import { attrs,  } from '../utils/d3Utils';
 
 export default class WorldMap {
   constructor(url, target) {
     this.url = url;
     this.target = target;
+    this._hasDrawn = false;
+    return this;
   }
 
+  /**
+   * @param {d3.GeoProjection} projection
+   * @return this
+   */
   setProjection(projection) {
     this.projection = projection;
     return this;
@@ -36,10 +42,34 @@ export default class WorldMap {
     }
   }
 
+  on(event, listener, capture) {
+    this.map.on(event, listener, capture);
+
+    return this;
+  }
+
+  update() {
+    if (!this._hasDrawn) {
+      throw new Error('you can not update a map which hasn\'t drawn yet.');
+    }
+    const update = this.map
+      .data(this.data);
+
+    update.exit().remove();
+  }
+
+  setData(data) {
+    if (data !== this.data) {
+      this.data = data;
+      this.update();
+    }
+  }
+
   draw(options = {}) {
     d3.json(this.url, data => {
-      const path = d3.geoPath().projection(this.projection);
-      this.path = path;
+      const pathFn = d3.geoPath().projection(this.projection);
+      this.data = data;
+      this.path = pathFn;
       this.map = d3
         .select(this.target)
         .call(attrs({
@@ -48,7 +78,7 @@ export default class WorldMap {
           fill: '#fe2121',
         }))
         .selectAll('path')
-        .data(data.features)
+        .data(data.features, pathOr(['properties', 'name'], identity))
         .enter();
 
       this.map
@@ -57,7 +87,7 @@ export default class WorldMap {
           'stroke-width': options.strokeWidth || prop('stroke-width', options) || 2,
           stroke: options.stroke || '#fe6565',
           fill: options.fill || 'none',
-          d: path,
+          d: pathFn,
         }));
       
       if (options.text) {
