@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
 import WorldMap from '../../charts/WorldMap';
-import { generateSVG, generateAxis } from '../../utils/d3Utils';
+import { generateSVG, generateAxis, attrs } from '../../utils/d3Utils';
 import { toNumber } from '../../utils/utils';
 import countries from '../../constants/countries';
 
@@ -26,6 +26,13 @@ function draw(data) {
     right: 20,
   });
 
+  d3.select('#countries-options')
+    .selectAll('label')
+    .data(data)
+    .enter()
+    .append('label')
+    .text(R.prop('key'));
+
   const xScale = d3
     .scaleLinear()
     .domain([2002, 2016])
@@ -45,7 +52,10 @@ function draw(data) {
   svg
     .append('g')
     .classed('y-axis', true)
-    .call(d3.axisLeft(yScale).tickSizeInner(0));
+    .call(d3.axisRight(yScale).tickSizeInner(0))
+    .call(g => {
+      g.selectAll('.tick:not(:first-of-type) line').attr('stroke-dasharray', '2,2');
+    });
 
   const line = d3.line()
     .x(d => xScale(+d.key))
@@ -82,9 +92,12 @@ function draw(data) {
         .scale(190)
         .translate([window.innerWidth / 2, window.innerHeight / 2])
     )
-    .draw({ text: true });
+    .draw({ 
+      text: true,
+      fill: '#aaa',
+    });
+  
 
-  map.draw({ text: true });
 }
 
 d3.csv('./data/taiwan-traveler.csv', data => {
