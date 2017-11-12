@@ -8,6 +8,30 @@
 </head>
 <body>
 <div></div>
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-filters">
+  <defs>
+    <filter id="distortion">
+      <feTurbulence
+        type="fractalNosise"
+        baseFrequency="0 0.15"
+        numOctaves="1"
+        result="warp"
+      />
+      <feDisplacementMap
+        xChannelSelector="R"
+        yChannelSelector="G"
+        scale="30"
+        in="SourceGraphic"
+        in2="warp"
+      />
+    </filter>
+  </defs>
+
+
+</svg>
+<button style="filter: url('#distortion')">CLICK ME</button>
+<textarea name="" id="" cols="30" rows="10" style="filter:url('#distortion')"></textarea>
 </body>
 <script src="/test.bundle.js"></script>
 </html>
